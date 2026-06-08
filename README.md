@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Maria's Mission Control
 
-## Getting Started
+Study schedule dashboard for the **Guardia Civil Escala de Cabos y Guardias** civil service exam.
 
-First, run the development server:
+Dark dashboard with a 4-week schedule, per-tema progress tracking, and a streak counter. Built with Next.js 14, Tailwind, and Supabase.
+
+---
+
+## Setup
+
+### 1. Supabase
+
+1. Create a free project at [supabase.com](https://supabase.com)
+2. Go to **SQL Editor** and paste the entire contents of `supabase-schema.sql`
+3. Hit **Run** - this creates all tables, seeds the 23 temas, and generates the 28-day schedule
+
+> To change the start date, edit the line `start_date date := '2026-06-09';` in the SQL file before running.
+
+### 2. Environment variables
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.local.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Fill in your values from the Supabase project dashboard (Settings > API):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Install and run locally
 
-## Learn More
+```bash
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open http://localhost:3000
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 4. Deploy to Netlify
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Push this repo to GitHub
+2. Connect the repo in Netlify
+3. Add the two environment variables in Site settings > Environment variables
+4. Deploy - `netlify.toml` handles the Next.js build config automatically
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Pages
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Route | Description |
+|---|---|
+| `/` | Today's schedule with checkboxes to mark blocks done |
+| `/week` | Weekly calendar view with day-type badges and progress bars |
+| `/progress` | Per-tema progress bars grouped by difficulty |
+
+---
+
+## Schedule logic
+
+- 28 days, 2 blocks per day: Manana (10:30-14:30, 240 min) and Tarde (16:30-20:00, 210 min)
+- Day types: `review` (repaso + test), `test` (test_tema + test_mixto), `simulacro` (2x full simulacro), `mixed`
+- Hard temas (T1, T2, T9, T14, T15, T16) appear 3x more frequently than easy temas
+- T6 (Fuerzas Armadas) is always skipped - image-based topic
+- Week 4 shifts to 70% test/simulacro days
+
+---
+
+## Stack
+
+- Next.js 14 with App Router + Turbopack
+- Tailwind CSS with Space Grotesk font
+- Supabase (PostgreSQL) for DB
+- Netlify for deployment via @netlify/plugin-nextjs
