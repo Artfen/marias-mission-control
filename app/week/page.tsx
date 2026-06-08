@@ -2,7 +2,7 @@ import { getWeekSchedule, getAllWeeks, getTemasMap } from "@/lib/queries";
 import Link from "next/link";
 import type { ScheduleBlock, Tema } from "@/types";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 const DAYS_ES = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"];
 

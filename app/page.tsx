@@ -26,7 +26,7 @@ const MONTHS_ES = [
   "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
 ];
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function TodayPage() {
   const [dayWithBlocks, temasMap, stats] = await Promise.all([

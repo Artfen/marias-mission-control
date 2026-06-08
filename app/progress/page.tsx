@@ -1,7 +1,7 @@
 import { getTemas, getProgreso } from "@/lib/queries";
 import type { Tema, Progreso } from "@/types";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 const DIFICULTAD_LABEL: Record<string, string> = {
   easy: "Facil",
